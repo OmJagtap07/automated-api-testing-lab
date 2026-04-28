@@ -1,0 +1,42 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  # ─── Bookstore API Service ─────────────────────────────────────────────────
+  api:
+    build:
+      context: .         # Build the image from the current directory (where Dockerfile lives)
+      dockerfile: Dockerfile
+    container_name: bookstore_api
+    restart: always
+    ports:
+      - "3000:3000"      # Map host port 3000 → container port 3000
+    environment:
+      # 'db' is the service name → Docker's internal DNS resolves it to the db container's IP
+      DB_HOST: mongodb://db:27017/bookworm_dev
+      PORT: 3000
+    depends_on:
+      - db               # Ensures 'db' starts before 'api'
+    volumes:
+      # Bind-mount local source files for live-reload during development
+      # Matches the WORKDIR /home/appuser/app set in the Dockerfile
+      - ./routes:/home/appuser/app/routes
+      - ./models:/home/appuser/app/models
+      - ./server.js:/home/appuser/app/server.js
+
+  # ─── MongoDB Database Service ─────────────────────────────────────────────
+  db:
+    image: mongo:6
+    container_name: bookstore_db
+    restart: always
+    ports:
+      - "27017:27017"    # Expose to host so MongoDB Compass can connect (optional)
+    volumes:
+      - db-data:/data/db # Named volume keeps data alive across container restarts
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: devuser
+      MONGO_INITDB_ROOT_PASSWORD: devpassword
+
+# ─── Named Volumes ─────────────────────────────────────────────────────────
+volumes:
+  db-data:              # Docker-managed volume; data persists even if the container is removed

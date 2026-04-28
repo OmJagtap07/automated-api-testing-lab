@@ -1,66 +1,62 @@
-import mongoose from "mongoose";
-import { faker } from "@faker-js/faker";
-import User from "./models/User.js";
+// seed.js
+const mongoose = require('mongoose');
+const Enrollment = require('./models/enrollment.model'); // Adjust path if needed
 
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb+srv://beatHubUser:Omjagtap%406419@beathub.kyybgl1.mongodb.net/?appName=BeatHub";
-const NUM_USERS = 500; // DO NOT CHANGE
-const BATCH_SIZE = 100;
+// 1. Connect to MongoDB (Make sure this string matches your index.js!)
+mongoose.connect('mongodb://127.0.0.1:27017/my_database')
+  .then(() => {
+    console.log('Connected to MongoDB for seeding...');
+    seedData();
+  })
+  .catch(err => console.log(err));
 
-async function connectDB() {
-  // TODO: connect to MongoDB using mongoose
-  await mongoose.connect(MONGODB_URI);
-  console.log("MongoDB connected");
-}
+const seedData = async () => {
+  try {
+    // 2. Clear existing data (optional)
+    await Enrollment.deleteMany({});
+    console.log('Cleared existing enrollments...');
 
-function generateFakeUser() {
-  // TODO: return one fake user object matching the User schema
+    // 3. Create dummy data
+    // We will use 5 different Student IDs
+    const students = [
+      new mongoose.Types.ObjectId(), // Student A
+      new mongoose.Types.ObjectId(), // Student B
+      new mongoose.Types.ObjectId(), // Student C
+      new mongoose.Types.ObjectId(), // Student D
+      new mongoose.Types.ObjectId()  // Student E
+    ];
 
-  return {
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
-    email: faker.internet.email(),
-    username: faker.internet.userName(),
-    password: faker.internet.password(8),
-    dateOfBirth: faker.date.birthdate({ min: 18, max: 40, mode: "age" }),
-    isActive: true,
-    address: {
-      street: faker.location.streetAddress(),
-      city: faker.location.city(),
-      state: faker.location.state(),
-      zipCode: faker.location.zipCode(),
-      country: faker.location.country()
-    }
-  };
-}
+    const enrollments = [
+      // Student A (5 enrollments - Should be #1)
+      { studentId: students[0], courseId: new mongoose.Types.ObjectId(), status: 'active' },
+      { studentId: students[0], courseId: new mongoose.Types.ObjectId(), status: 'active' },
+      { studentId: students[0], courseId: new mongoose.Types.ObjectId(), status: 'active' },
+      { studentId: students[0], courseId: new mongoose.Types.ObjectId(), status: 'completed' },
+      { studentId: students[0], courseId: new mongoose.Types.ObjectId(), status: 'dropped' },
 
-async function seedDatabase() {
-  // TODO:
-  // 1. Delete all existing users
-  // 2. Insert 500 users in batches of 100
-  // 3. Log progress to the console
+      // Student B (3 enrollments - Should be #2)
+      { studentId: students[1], courseId: new mongoose.Types.ObjectId(), status: 'active' },
+      { studentId: students[1], courseId: new mongoose.Types.ObjectId(), status: 'active' },
+      { studentId: students[1], courseId: new mongoose.Types.ObjectId(), status: 'completed' },
 
-  await User.deleteMany({});
-  console.log("Existing users deleted");
+      // Student C (2 enrollments)
+      { studentId: students[2], courseId: new mongoose.Types.ObjectId(), status: 'active' },
+      { studentId: students[2], courseId: new mongoose.Types.ObjectId(), status: 'active' },
 
-  for (let i = 0; i < NUM_USERS; i += BATCH_SIZE) {
-    const users = [];
+      // Student D (1 enrollment)
+      { studentId: students[3], courseId: new mongoose.Types.ObjectId(), status: 'active' },
 
-    for (let j = 0; j < BATCH_SIZE; j++) {
-      users.push(generateFakeUser());
-    }
+      // Student E (1 enrollment)
+      { studentId: students[4], courseId: new mongoose.Types.ObjectId(), status: 'dropped' },
+    ];
 
-    await User.insertMany(users);
-    console.log(`Inserted ${i + BATCH_SIZE} users`);
+    // 4. Insert into Database
+    await Enrollment.insertMany(enrollments);
+    console.log('✅ Success! Added 12 dummy enrollments.');
+
+    // 5. Close Connection
+    mongoose.connection.close();
+  } catch (error) {
+    console.error('Error seeding data:', error);
   }
-
-  console.log("All users seeded successfully");
-}
-
-async function main() {
-  await connectDB();
-  await seedDatabase();
-  await mongoose.disconnect();
-  console.log("Database disconnected.");
-}
-
-main().catch(console.error);
+};

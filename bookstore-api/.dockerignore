@@ -1,0 +1,19 @@
+# Exclude local node_modules — dependencies are installed inside the container
+node_modules
+
+# Exclude Git history — not needed in the image
+.git
+.gitignore
+
+# SECURITY: Never copy .env into the image — secrets must be injected at runtime
+.env
+.env.*
+
+# Exclude Docker files themselves — not needed inside the container
+Dockerfile
+.dockerignore
+
+# Exclude documentation and logs
+README.md
+npm-debug.log*
+*.log
