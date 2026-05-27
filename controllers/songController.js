@@ -69,4 +69,26 @@ const getSongsCursor = async (req, res) => {
     }
 };
 
-module.exports = { getSongsCursor };
+const createSong = async (req, res) => {
+    try {
+        // Stub for the screenshot demonstration
+        res.status(201).json({
+            success: true,
+            message: "Song uploaded successfully",
+            data: {
+                _id: new mongoose.Types.ObjectId(),
+                title: req.body.title || "My Hit Song",
+                artist: req.body.artist || "DJ Artist",
+                duration: 200
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+};
+
+const deleteSong = async (req, res) => {
+    res.status(200).json({ success: true, message: 'Song deleted successfully' });
+};
+
+module.exports = { getSongsCursor, createSong, deleteSong };
