@@ -4,7 +4,7 @@ A production-ready REST API for a music streaming platform built with **Node.js,
 Features Role-Based Access Control (RBAC) with Admin, Artist, and Listener roles.
 
 ## 🚀 Live Demo
-> Base URL: `https://beathub-api.onrender.com` *(deploying soon)*
+> Base URL: `https://beathub-api-jtlk.onrender.com` 
 
 ---
 
