@@ -6,6 +6,7 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/auth');
 const analyticsRoutes = require('./routes/analytics.routes');
 const songRoutes = require('./routes/songs');
+const errorHandler = require('./middleware/errorHandler');
 
 // ─── Critical Environment Variable Checks ────────────────────────────────────
 // The application cannot run securely without these; exit immediately if missing.
@@ -50,6 +51,9 @@ app.post('/api/user/upload', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/analytics', analyticsRoutes);
 app.use('/api', songRoutes);
+
+// Error Handling Middleware MUST be last
+app.use(errorHandler);
 
 // Export the app for testing
 module.exports = app;
