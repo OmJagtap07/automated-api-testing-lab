@@ -70,6 +70,10 @@ describe("RBAC — Song Routes", () => {
       });
       
     // 403 Forbidden is expected when a user has a valid token but lacks the correct role
+    if (res.statusCode !== 403) {
+      // console.log('Login Response:', loginRes.body);
+      // console.log('Upload Response:', res.body);
+    }
     expect(res.statusCode).toBe(403); 
   });
 });

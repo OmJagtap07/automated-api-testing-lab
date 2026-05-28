@@ -11,7 +11,7 @@ const generateToken = (id) => {
 // @desc    Register user
 // @route   POST /api/auth/register
 // @access  Public
-exports.register = async (req, res) => {
+exports.register = async (req, res, next) => {
     try {
         const { name, email, password, role } = req.body;
 
@@ -56,17 +56,14 @@ exports.register = async (req, res) => {
             }
         });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            error: { message: 'Server Error' }
-        });
+        next(error);
     }
 };
 
 // @desc    Login user
 // @route   POST /api/auth/login
 // @access  Public
-exports.login = async (req, res) => {
+exports.login = async (req, res, next) => {
     try {
         const { email, password } = req.body;
 
@@ -114,9 +111,6 @@ exports.login = async (req, res) => {
         });
 
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            error: { message: 'Server Error' }
-        });
+        next(error);
     }
 };

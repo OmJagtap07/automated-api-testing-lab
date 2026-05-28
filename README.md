@@ -76,3 +76,19 @@ npm test
 
 ## 📮 API Testing
 Import `BeatHub.postman_collection.json` from this repo into Postman to test all endpoints.
+
+---
+
+## 📸 API Screenshots
+
+### Register
+![Register](docs/screenshots/register.png)
+
+### Login
+![Login](docs/screenshots/login.png)
+
+### RBAC in Action — Listener blocked from uploading
+![RBAC](docs/screenshots/rbac-blocked.png)
+
+### Upload Song — Artist success
+![Upload Song](docs/screenshots/upload-song.png)
